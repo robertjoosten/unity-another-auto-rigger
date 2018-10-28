@@ -27,7 +27,7 @@ public class RuntimeTransformHelper : MonoBehaviour {
     private AnimationCurve defaultCurve; 
     private float defaultLength;
 
-    void Start () {
+	void Start () {
         // construct default values
         defaultPosition = new Vector3(_defaultPositionX, _defaultPositionY, _defaultPositionZ);
         defaultLength = defaultPosition.magnitude;
@@ -41,7 +41,7 @@ public class RuntimeTransformHelper : MonoBehaviour {
         );
     }
 	
-    void Update () {
+	void Update () {
         // validate pose reader
         if (poseReader == null)
             return;
