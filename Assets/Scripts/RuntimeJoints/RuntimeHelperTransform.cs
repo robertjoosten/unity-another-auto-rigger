@@ -13,8 +13,8 @@ public class RuntimeHelperTransform : MonoBehaviour {
     [Space(5)]
     public float multiplier = 1;
     public int _reverseDirection = 1;
-    public float _minValue = -1;
-    public float _maxValue = 1;
+    public float _negValue = -1;
+    public float _posValue = 1;
 
     [Header("[Default Attributes]")]
     [Space(5)]
@@ -33,10 +33,10 @@ public class RuntimeHelperTransform : MonoBehaviour {
         defaultLength = defaultPosition.magnitude;
         defaultCurve = new AnimationCurve(
             new Keyframe(-180, 0), 
-            new Keyframe(-170, _minValue * defaultLength * _reverseDirection),
-            new Keyframe(-120, _minValue * defaultLength * _reverseDirection),
-            new Keyframe(120, _maxValue * defaultLength * _reverseDirection),
-            new Keyframe(170, _maxValue * defaultLength * _reverseDirection),
+            new Keyframe(-170, _negValue * defaultLength * _reverseDirection),
+            new Keyframe(-120, _negValue * defaultLength * _reverseDirection),
+            new Keyframe(120, _posValue * defaultLength * _reverseDirection),
+            new Keyframe(170, _posValue * defaultLength * _reverseDirection),
             new Keyframe(180, 0)
         );
     }
