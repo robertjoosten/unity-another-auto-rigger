@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class RuntimeTransformHelper : MonoBehaviour {
+public class RuntimeHelperTransform : MonoBehaviour {
 
     [Header("[Pose Reader]")]
     [Space(5)]
