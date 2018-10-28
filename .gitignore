@@ -1,0 +1,7 @@
+﻿/*
+!.gitignore
+!LICENSE
+!README.md
+!Assets/
+Assets/*
+!Assets/Scripts/
