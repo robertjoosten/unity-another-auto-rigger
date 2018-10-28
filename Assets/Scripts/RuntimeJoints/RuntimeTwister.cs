@@ -13,7 +13,7 @@ public class RuntimeTwister : MonoBehaviour {
     [Space(5)]
     public float multiplier = 0.5f;
 	
-	void Update() {
+    void Update() {
         // validate pose reader
         if (poseReader == null)
             return;
