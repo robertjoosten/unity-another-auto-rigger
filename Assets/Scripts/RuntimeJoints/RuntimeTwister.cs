@@ -11,7 +11,7 @@ public class RuntimeTwister : MonoBehaviour {
 
     [Header("[User Attributes]")]
     [Space(5)]
-    public float multiplier = 0.5f;
+    public float multiplier = 5f;
 	
     void Update() {
         // validate pose reader
@@ -20,7 +20,7 @@ public class RuntimeTwister : MonoBehaviour {
 
         // get twist value
         float rollValue = poseReader.GetYawPitchRoll().y;
-        float twistValue = rollValue * multiplier;
+        float twistValue = rollValue * multiplier * 0.1f;
 
         // set twist value
         transform.localRotation = Quaternion.Euler(0, twistValue, 0);
