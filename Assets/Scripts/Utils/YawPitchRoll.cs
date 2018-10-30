@@ -16,12 +16,23 @@ public class YawPitchRoll : MonoBehaviour {
     public Transform parent;
     public Transform child;
 
+    [Header("[Euler Offset]")]
+    [Space(5)]
+    public float parentOffsetX;
+    public float parentOffsetY;
+    public float parentOffsetZ;
+
+    private Matrix4x4 parentOffsetMatrix;
     private int yawIndex = 0;
     private int pitchIndex = 1;
     private int rollIndex = 2;
 
     void Start()
     {
+        // construct offset rotation on parent
+        Quaternion offsetQuat = Quaternion.Euler(parentOffsetX, parentOffsetY, parentOffsetZ);
+        parentOffsetMatrix = Matrix4x4.Rotate(offsetQuat);
+
         // construct mapping list to get index 
         List<string> mappingList = new List<string>();
         mappingList.Add("X");
@@ -45,7 +56,7 @@ public class YawPitchRoll : MonoBehaviour {
         Matrix4x4 childMatrix = Matrix4x4.TRS(child.position, child.rotation, child.localScale);
 
         // get local transformation matrix of child
-        Matrix4x4 localMatrix = parentMatrix.inverse * childMatrix;
+        Matrix4x4 localMatrix = (parentMatrix * parentOffsetMatrix).inverse * childMatrix;
         return localMatrix.rotation;
     }
 
@@ -59,9 +70,9 @@ public class YawPitchRoll : MonoBehaviour {
 
         // populate yaw pitch roll vector
         Vector3 yawPitchRoll = new Vector3();
-        yawPitchRoll[yawIndex] = yaw * Mathf.Rad2Deg;
-        yawPitchRoll[pitchIndex] = pitch * Mathf.Rad2Deg;
-        yawPitchRoll[rollIndex] = roll * Mathf.Rad2Deg;
+        yawPitchRoll[yawIndex] = yaw * Mathf.Rad2Deg *-1;
+        yawPitchRoll[pitchIndex] = pitch * Mathf.Rad2Deg * -1;
+        yawPitchRoll[rollIndex] = roll * Mathf.Rad2Deg * -1;
 
         return yawPitchRoll;
     }

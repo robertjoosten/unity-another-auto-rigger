@@ -12,7 +12,20 @@ public class RuntimeHelperTransform : MonoBehaviour {
     [Header("[User Attributes]")]
     [Space(5)]
     public float multiplier = 1;
-    public int _reverseDirection = 1;
+
+    [Header("[Offset Attributes]")]
+    [Space(5)]
+    public float offsetX;
+    public float offsetY;
+    public float offsetZ;
+
+    [Header("[Multiplier Attributes]")]
+    [Space(5)]
+    public int _directionMultiplier = 1;
+    public int _blockMultiplier = 1;
+
+    [Header("[Curve Attributes]")]
+    [Space(5)]
     public float _negValue = -1;
     public float _posValue = 1;
 
@@ -24,24 +37,29 @@ public class RuntimeHelperTransform : MonoBehaviour {
     public float _defaultPositionZ;
 
     private Vector3 defaultPosition;
+    private Vector3 startPosition;
     private AnimationCurve defaultCurve; 
     private float defaultLength;
 
-	void Start () {
+    void Start () {
         // construct default values
         defaultPosition = new Vector3(_defaultPositionX, _defaultPositionY, _defaultPositionZ);
         defaultLength = defaultPosition.magnitude;
         defaultCurve = new AnimationCurve(
-            new Keyframe(-180, 0), 
-            new Keyframe(-170, _negValue * defaultLength * _reverseDirection),
-            new Keyframe(-120, _negValue * defaultLength * _reverseDirection),
-            new Keyframe(120, _posValue * defaultLength * _reverseDirection),
-            new Keyframe(170, _posValue * defaultLength * _reverseDirection),
-            new Keyframe(180, 0)
+            new Keyframe(180, 0), 
+            new Keyframe(170, _negValue * _directionMultiplier * _blockMultiplier),
+            new Keyframe(120, _negValue * _directionMultiplier * _blockMultiplier),
+            new Keyframe(-120, _posValue * _directionMultiplier * _blockMultiplier),
+            new Keyframe(-170, _posValue * _directionMultiplier * _blockMultiplier),
+            new Keyframe(-180, 0)
         );
+
+        // construct start position
+        Vector3 offsetPosition = new Vector3(offsetX, offsetY, offsetZ) * _blockMultiplier;
+        startPosition = defaultPosition + offsetPosition;
     }
 	
-	void Update () {
+    void Update () {
         // validate pose reader
         if (poseReader == null)
             return;
@@ -50,9 +68,9 @@ public class RuntimeHelperTransform : MonoBehaviour {
         Vector3 yawPitchRoll = poseReader.GetYawPitchRoll();
 
         float twistValue = yawPitchRoll[_defaultAxis];
-        float twistOffset = defaultCurve.Evaluate(twistValue) * multiplier;
+        float twistOffset = defaultCurve.Evaluate(twistValue) * defaultLength * multiplier;
 
         // set local position
-        transform.localPosition = defaultPosition + new Vector3(0, twistOffset, 0);
+        transform.localPosition = startPosition + new Vector3(0, twistOffset, 0);
     }
 }
