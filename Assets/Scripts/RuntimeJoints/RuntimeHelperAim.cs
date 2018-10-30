@@ -15,15 +15,15 @@ public class RuntimeHelperAim : MonoBehaviour {
     private Vector3 xDirection = new Vector3(1, 0, 0);
 
     void Update () {
-        // get parent z vector
+        // get parent x vector
         Transform parentTransform = transform.parent;
         Matrix4x4 parentMatrix = Matrix4x4.TRS(parentTransform.position, parentTransform.rotation, parentTransform.localScale);
         Vector3 xVectorParent = parentMatrix.MultiplyVector(xDirection);
 
         // get y vector
-        Vector3 yVector = (target.position - transform.position) * _blockMultiplier;
+        Vector3 yVector = (target.position - transform.position).normalized * _blockMultiplier;
 
-        // get x vector
+        // get z vector
         Vector3 zVector = Vector3.Cross(xVectorParent, yVector);
 
         // set rotation
