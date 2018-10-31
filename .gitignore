@@ -3,6 +3,8 @@
 !LICENSE
 !README.md
 !Assets/
+!submodules/
 Assets/*
 !Assets/Scripts/
 !Assets/Editor/
+!Assets/Plugins/
