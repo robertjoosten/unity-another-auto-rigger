@@ -20,6 +20,10 @@ namespace AnotherAutoRigger
 
         void Update()
         {
+            // validate target
+            if (target == null)
+                return;
+
             // get parent x vector
             Transform parentTransform = transform.parent;
             Matrix4x4 parentMatrix = Matrix4x4.TRS(parentTransform.position, parentTransform.rotation, parentTransform.localScale);

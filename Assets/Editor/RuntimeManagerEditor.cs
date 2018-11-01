@@ -11,10 +11,10 @@ public class ObjectBuilderEditor : Editor
         DrawDefaultInspector();
 
         RuntimeManager script = (RuntimeManager)target;
-        if (GUILayout.Button("Apply Runtime Objects"))
+        if (GUILayout.Button("Build Runtime Skeleton"))
         {
-            string path = EditorUtility.OpenFilePanel("Load skeleton preset", "", "skeletonPreset");
-            script.ApplyRuntimeObjects(path);
+            string filePath = EditorUtility.OpenFilePanel("Load skeleton preset", "", "skeletonPreset");
+            script.BuildRuntimeSkeleton(filePath);
         }
     }
 }

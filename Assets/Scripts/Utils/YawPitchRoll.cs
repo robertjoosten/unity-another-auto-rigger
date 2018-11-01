@@ -6,7 +6,6 @@ namespace AnotherAutoRigger
 {
     [System.Serializable]
     public class YawPitchRoll : MonoBehaviour {
-
         public enum MappingOptions { ZXY, XYZ, XZY, YXZ, YZX, ZYX };
 
         [Header("[Yaw-Pitch-Roll Mapper]")]
@@ -15,14 +14,14 @@ namespace AnotherAutoRigger
 
         [Header("[Transforms]")]
         [Space(5)]
-        public Transform parent;
-        public Transform child;
+        public Transform origin;
+        public Transform insertion;
 
         [Header("[Euler Offset]")]
         [Space(5)]
-        public float parentOffsetX;
-        public float parentOffsetY;
-        public float parentOffsetZ;
+        public float _parentOffsetX;
+        public float _parentOffsetY;
+        public float _parentOffsetZ;
 
         private Matrix4x4 parentOffsetMatrix;
         private int yawIndex = 0;
@@ -32,7 +31,7 @@ namespace AnotherAutoRigger
         void Start()
         {
             // construct offset rotation on parent
-            Quaternion offsetQuat = Quaternion.Euler(parentOffsetX, parentOffsetY, parentOffsetZ);
+            Quaternion offsetQuat = Quaternion.Euler(_parentOffsetX, _parentOffsetY, _parentOffsetZ);
             parentOffsetMatrix = Matrix4x4.Rotate(offsetQuat);
 
             // construct mapping list to get index 
@@ -50,12 +49,12 @@ namespace AnotherAutoRigger
 
         private Quaternion GetLocalRotation () {
             // validate transforms
-            if (parent == null || child == null)
+            if (origin == null || insertion == null)
                 return Quaternion.identity;
 
             // convert transforms to 4x4 matrices
-            Matrix4x4 parentMatrix = Matrix4x4.TRS(parent.position, parent.rotation, parent.localScale);
-            Matrix4x4 childMatrix = Matrix4x4.TRS(child.position, child.rotation, child.localScale);
+            Matrix4x4 parentMatrix = Matrix4x4.TRS(origin.position, origin.rotation, origin.localScale);
+            Matrix4x4 childMatrix = Matrix4x4.TRS(insertion.position, insertion.rotation, insertion.localScale);
 
             // get local transformation matrix of child
             Matrix4x4 localMatrix = (parentMatrix * parentOffsetMatrix).inverse * childMatrix;

@@ -6,12 +6,8 @@ using AnotherAutoRigger;
 namespace AnotherAutoRigger
 {
     [System.Serializable]
-    public class RuntimeTwister : MonoBehaviour
+    public class RuntimeTwister : YawPitchRollAssignment
     {
-        [Header("[Pose Reader]")]
-        [Space(5)]
-        public YawPitchRoll poseReader;
-
         [Header("[User Attributes]")]
         [Space(5)]
         public float multiplier = 5f;

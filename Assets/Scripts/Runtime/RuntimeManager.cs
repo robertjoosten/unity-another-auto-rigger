@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SimpleJSON;
 using AnotherAutoRigger;
 
 namespace AnotherAutoRigger
@@ -9,66 +11,183 @@ namespace AnotherAutoRigger
     [System.Serializable]
     public class RuntimeManager : MonoBehaviour
     {
-        private Component runtimeObject = new Component();
+        private string namespacePrefix;
+        private string typePrefix = "AnotherAutoRigger.";
+        private SimpleJSON.JSONNode runtimeDataDict;
+        private List<string> runtimeDataKeys = new List<string>();
+        private List<string> runtimeObjectNames = new List<string>
+        { 
+            "RuntimeTwister",
+            "RuntimeHelperTranslate",
+            "RuntimeHelperAim"
+        };
 
-        public void ApplyRuntimeObjects(string path)
+        // -------------------------------------------------------------------------
+
+        private SimpleJSON.JSONNode GetRuntimeDataFromFilePath(string filePath)
         {
             // load json data
-
-
-            // loop joints
-            foreach (var joint in GetComponentsInChildren<Transform>())
-            {
-                // get runtime type
-                int runtimeType = GetRuntimeType(joint.name);
-                
-                // add runtime component
-                switch (runtimeType)
-                {
-                    case 0:
-                        // no runtime match found, skip
-                        continue;
-                    case 1:
-                        runtimeObject = GetRuntimeObject<RuntimeTwister>(joint.gameObject);
-                        break;
-                    case 2:
-                        runtimeObject = GetRuntimeObject<RuntimeHelperTranslate>(joint.gameObject);
-                        break;
-                    case 3:
-                        runtimeObject = GetRuntimeObject<RuntimeHelperAim>(joint.gameObject);
-                        break;
-                }
-
-            }
+            string skeletonDataString = File.ReadAllText(filePath);
+            var skeletonDataDict = JSON.Parse(skeletonDataString);
+            return skeletonDataDict["runtime"];
         }
 
-        private int GetRuntimeType(String name)
+        // -------------------------------------------------------------------------
+
+        private GameObject GetGameObject(string name)
         {
-            // split name into list
-            String[] elements = name.Split('_');
-   
-            // validate name list
-            if (elements[elements.Length - 1].IsDigit() && elements[elements.Length - 2] == "jnt")
+            // get object
+            string path = namespacePrefix + name;
+            GameObject obj = GameObject.Find(path);
+
+            // validate object
+            if (obj == null)
             {
-                if (elements[elements.Length - 3] == "twister")
-                    return 1;
-                else if (elements[elements.Length - 3] == "helper")
-                    return 2;
-                else if (elements[elements.Length - 3] == "aim")
-                    return 3;
+                Debug.LogWarning(path + " doesn't exist!");
             }
-            return 0;
+
+            return obj;
         }
 
-        private T GetRuntimeObject<T>(GameObject joint) where T : Component
+        private object GetRuntimeObject(GameObject runtimeJoint, Type runtimeObjectString)
         {
-            // see if component exists
-            T existing = joint.GetComponent<T>();
+            // find component
+            var existing = runtimeJoint.GetComponent(runtimeObjectString);
             if (existing != null)
                 return existing;
 
             // add component
-            return joint.AddComponent<T>();
+            return runtimeJoint.AddComponent(runtimeObjectString);
+        }
+
+        // -------------------------------------------------------------------------
+
+        private void ProcessRuntimeObjects()
+        {
+            // loop runtime object names
+            foreach (string runtimeObjectName in runtimeObjectNames)
+            {
+                // skip if runtime object is not part of data provided
+                if (!runtimeDataKeys.Contains(runtimeObjectName))
+                    continue;
+
+                // get runtime data
+                var runtimeData = runtimeDataDict[runtimeObjectName];
+
+                // get runtime object type
+                string runtimeObjectString = typePrefix + runtimeObjectName;
+                Type runtimeObjectType = Type.GetType(runtimeObjectString);
+
+                // loop joints
+                List<string> runtimeJoints = runtimeDataDict[runtimeObjectName].GetKeys();
+                foreach (string runtimeJointName in runtimeJoints)
+                {
+                    // get joint object
+                    GameObject runtimeJoint = GetGameObject(runtimeJointName);
+
+                    // validate joint object
+                    if (runtimeJoint == null)
+                        continue;
+
+                    // apply runtime object
+                    var runtimeObject = GetRuntimeObject(
+                        runtimeJoint, 
+                        runtimeObjectType
+                    );
+
+                    // apply runtime data
+                    var runtimeObjectData = runtimeData[runtimeJointName].ToString();
+                    JsonUtility.FromJsonOverwrite(
+                        runtimeObjectData, 
+                        runtimeObject
+                    );
+                }
+            }
+        }
+
+        private void ProcessYawPitchRollObjects()
+        {
+            // validate jaw pitch roll 
+            if (!runtimeDataKeys.Contains("YawPitchRoll"))
+                return;
+
+            // get runtime data
+            var yawPitchRollData = runtimeDataDict["YawPitchRoll"];
+
+            // get runtime object type
+            string yawPitchRollObjectString = typePrefix + "YawPitchRoll";
+            Type yawPitchRollObjectType = Type.GetType(yawPitchRollObjectString);
+
+            // loop joints
+            List<string> yawPitchRollJoints = runtimeDataDict["YawPitchRoll"].GetKeys();
+            foreach (string yawPitchJointName in yawPitchRollJoints)
+            {
+                // get joint object
+                GameObject yawPitchRollJoint = GetGameObject(yawPitchJointName);
+
+                // validate joint object
+                if (yawPitchRollJoint == null)
+                    continue;
+
+                // apply runtime object
+                var yawPitchRollObject = GetRuntimeObject(
+                    yawPitchRollJoint,
+                    yawPitchRollObjectType
+                ) as YawPitchRoll;
+
+                // apply runtime data
+                var yawPitchRollObjectData = yawPitchRollData[yawPitchJointName];
+                var yawPitchRollInitializeObjectData = yawPitchRollObjectData["initialize"].ToString();
+                JsonUtility.FromJsonOverwrite(
+                    yawPitchRollInitializeObjectData,
+                    yawPitchRollObject
+                );
+
+                // loop connections
+                foreach (string connectedJointName in yawPitchRollObjectData["connected"].Values)
+                {
+                    // get joint object
+                    GameObject connectedJoint = GetGameObject(connectedJointName);
+
+                    // validate joint object
+                    if (connectedJoint == null)
+                        continue;
+
+                    // loop runtime object names
+                    foreach (string runtimeObjectName in runtimeObjectNames)
+                    {
+                        // get runtime object type
+                        string runtimeObjectString = typePrefix + runtimeObjectName;
+                        Type runtimeObjectType = Type.GetType(runtimeObjectString);
+
+                        // get runtime object on joint
+                        var runtimeObject = connectedJoint.GetComponent(runtimeObjectType) as YawPitchRollAssignment;
+                        if (runtimeObject == null)
+                            continue;
+
+                        // set pose reader
+                        runtimeObject.poseReader = yawPitchRollObject;
+                    }
+                }
+            }
+        }
+
+        // -------------------------------------------------------------------------
+
+        public void BuildRuntimeSkeleton(string filePath)
+        {
+            // get runtime data
+            runtimeDataDict = GetRuntimeDataFromFilePath(filePath);
+            runtimeDataKeys = runtimeDataDict.GetKeys();
+
+            // get namespace
+            namespacePrefix = gameObject.GetNamespace();
+
+            // process runtime objects
+            ProcessRuntimeObjects();
+
+            // process yaw pitch roll objects
+            ProcessYawPitchRollObjects();            
         }
     }
 }
