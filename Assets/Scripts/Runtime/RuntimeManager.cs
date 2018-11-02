@@ -91,7 +91,7 @@ namespace AnotherAutoRigger
 
                     // apply runtime object
                     var runtimeObject = GetRuntimeObject(
-                        runtimeJoint, 
+                        runtimeJoint,
                         runtimeObjectType
                     );
 
@@ -161,7 +161,7 @@ namespace AnotherAutoRigger
                         Type runtimeObjectType = Type.GetType(runtimeObjectString);
 
                         // get runtime object on joint
-                        var runtimeObject = connectedJoint.GetComponent(runtimeObjectType) as YawPitchRollAssignment;
+                        var runtimeObject = connectedJoint.GetComponent(runtimeObjectType) as YawPitchRollInherit;
                         if (runtimeObject == null)
                             continue;
 

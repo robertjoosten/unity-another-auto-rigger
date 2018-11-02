@@ -1,27 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using SimpleJSON;
 using UnityEngine;
 
 namespace AnotherAutoRigger
 {
-    public static class StringExtension
-    {
-        public static bool IsDigit(this string str)
-        {
-            foreach (char c in str)
-            {
-                if (c < '0' || c > '9')
-                    return false;
-            }
-
-            return true;
-        }
-    }
-
     public static class JSONNode
     {
         public static List<string> GetKeys(this SimpleJSON.JSONNode dict)
@@ -46,7 +30,6 @@ namespace AnotherAutoRigger
     { 
         public static string GetNamespace(this GameObject gameObject)
         {
-            // validate of name contains a namespace
             if (gameObject.name.Contains(":"))
             {
                 List<string> split = gameObject.name.Split(':').ToList();
@@ -54,8 +37,19 @@ namespace AnotherAutoRigger
                 return String.Join(":", split.ToArray()) + ":";
             }
 
-            // return empty namespace
             return "";
+        }
+    }
+
+    public static class MonoBehaviourExtension
+    {
+        public static T GetComponentInGameObjectFromString<T>(this MonoBehaviour script, string objName)
+        {
+            GameObject obj = GameObject.Find(objName);
+            if (obj == null)
+                return default(T);
+
+            return obj.GetComponent<T>();
         }
     }
 }

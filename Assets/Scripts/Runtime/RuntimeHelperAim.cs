@@ -6,11 +6,14 @@ using AnotherAutoRigger;
 namespace AnotherAutoRigger
 {
     [System.Serializable]
+    [ExecuteInEditMode]
     public class RuntimeHelperAim : MonoBehaviour
     {
+        [HideInInspector]public string target;
+
         [Header("[Transforms]")]
         [Space(5)]
-        public Transform target;
+        public Transform targetTransform;
 
         [Header("[Multiplier Attributes]")]
         [Space(5)]
@@ -18,10 +21,15 @@ namespace AnotherAutoRigger
 
         private Vector3 xDirection = new Vector3(1, 0, 0);
 
+        void Awake()
+        {
+            targetTransform = this.GetComponentInGameObjectFromString<Transform>(target);
+        }
+
         void Update()
         {
             // validate target
-            if (target == null)
+            if (targetTransform == null)
                 return;
 
             // get parent x vector
@@ -30,7 +38,7 @@ namespace AnotherAutoRigger
             Vector3 xVectorParent = parentMatrix.MultiplyVector(xDirection);
 
             // get y vector
-            Vector3 yVector = (target.position - transform.position).normalized * _blockMultiplier;
+            Vector3 yVector = (targetTransform.position - transform.position).normalized * _blockMultiplier;
 
             // get z vector
             Vector3 zVector = Vector3.Cross(xVectorParent, yVector);

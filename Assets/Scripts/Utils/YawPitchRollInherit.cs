@@ -5,7 +5,7 @@ using AnotherAutoRigger;
 
 namespace AnotherAutoRigger
 {
-    public class YawPitchRollAssignment : MonoBehaviour
+    public class YawPitchRollInherit : MonoBehaviour
     {
         [Header("[Pose Reader]")]
         [Space(5)]

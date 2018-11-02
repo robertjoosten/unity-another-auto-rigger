@@ -5,17 +5,21 @@ using UnityEngine;
 namespace AnotherAutoRigger
 {
     [System.Serializable]
-    public class YawPitchRoll : MonoBehaviour {
+    [ExecuteInEditMode]
+    public class YawPitchRoll : MonoBehaviour
+    {
         public enum MappingOptions { ZXY, XYZ, XZY, YXZ, YZX, ZYX };
 
         [Header("[Yaw-Pitch-Roll Mapper]")]
         [Space(5)]
         public MappingOptions mapping;
 
+        [HideInInspector] public string origin;
+        [HideInInspector] public string insertion;
         [Header("[Transforms]")]
         [Space(5)]
-        public Transform origin;
-        public Transform insertion;
+        public Transform originTransform;
+        public Transform insertionTransform;
 
         [Header("[Euler Offset]")]
         [Space(5)]
@@ -27,6 +31,13 @@ namespace AnotherAutoRigger
         private int yawIndex = 0;
         private int pitchIndex = 1;
         private int rollIndex = 2;
+
+        void Awake()
+        {
+            // populate transforms
+            originTransform = this.GetComponentInGameObjectFromString<Transform>(origin);
+            insertionTransform = this.GetComponentInGameObjectFromString<Transform>(insertion);
+        }
 
         void Start()
         {
@@ -53,11 +64,11 @@ namespace AnotherAutoRigger
                 return Quaternion.identity;
 
             // convert transforms to 4x4 matrices
-            Matrix4x4 parentMatrix = Matrix4x4.TRS(origin.position, origin.rotation, origin.localScale);
-            Matrix4x4 childMatrix = Matrix4x4.TRS(insertion.position, insertion.rotation, insertion.localScale);
+            Matrix4x4 parentMatrix = Matrix4x4.TRS(originTransform.position, originTransform.rotation, originTransform.localScale);
+            Matrix4x4 childMatrix = Matrix4x4.TRS(insertionTransform.position, insertionTransform.rotation, insertionTransform.localScale);
 
             // get local transformation matrix of child
-            Matrix4x4 localMatrix = (parentMatrix * parentOffsetMatrix).inverse * childMatrix;
+            Matrix4x4 localMatrix = childMatrix * (parentMatrix * parentOffsetMatrix).inverse;
             return localMatrix.rotation;
         }
 

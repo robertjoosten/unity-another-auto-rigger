@@ -6,12 +6,13 @@ using AnotherAutoRigger;
 namespace AnotherAutoRigger
 {
     [System.Serializable]
-    public class RuntimeTwister : YawPitchRollAssignment
+    public class RuntimeTwister : YawPitchRollInherit
     {
-        [Header("[User Attributes]")]
+        [Header("[Multiplier Attributes]")]
         [Space(5)]
         public float multiplier = 5f;
-	
+        public int _blockMultiplier = 1;
+
         void Update() {
             // validate pose reader
             if (poseReader == null)
@@ -19,7 +20,7 @@ namespace AnotherAutoRigger
 
             // get twist value
             float rollValue = poseReader.GetYawPitchRoll().y;
-            float twistValue = rollValue * multiplier * 0.1f;
+            float twistValue = rollValue * multiplier * _blockMultiplier * 0.1f;
 
             // set twist value
             transform.localRotation = Quaternion.Euler(0, twistValue, 0);

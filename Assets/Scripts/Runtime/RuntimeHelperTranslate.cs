@@ -6,22 +6,19 @@ using AnotherAutoRigger;
 namespace AnotherAutoRigger
 {
     [System.Serializable]
-    public class RuntimeHelperTranslate : YawPitchRollAssignment
+    public class RuntimeHelperTranslate : YawPitchRollInherit
     {
-        [Header("[User Attributes]")]
+        [Header("[Multiplier Attributes]")]
         [Space(5)]
         public float multiplier = 1;
+        public int _directionMultiplier = 1;
+        public int _blockMultiplier = 1;
 
         [Header("[Offset Attributes]")]
         [Space(5)]
         public float offsetX;
         public float offsetY;
         public float offsetZ;
-
-        [Header("[Multiplier Attributes]")]
-        [Space(5)]
-        public int _directionMultiplier = 1;
-        public int _blockMultiplier = 1;
 
         [Header("[Curve Attributes]")]
         [Space(5)]
@@ -43,7 +40,7 @@ namespace AnotherAutoRigger
         void Start()
         {
             // construct default values
-            defaultPosition = new Vector3(_defaultPositionX, _defaultPositionY, _defaultPositionZ);
+            defaultPosition = new Vector3(-_defaultPositionX, _defaultPositionY, _defaultPositionZ);
             defaultLength = defaultPosition.magnitude;
             defaultCurve = new AnimationCurve(
                 new Keyframe(180, 0),
@@ -55,7 +52,7 @@ namespace AnotherAutoRigger
             );
 
             // construct start position
-            Vector3 offsetPosition = new Vector3(offsetX, offsetY, offsetZ) * _blockMultiplier;
+            Vector3 offsetPosition = new Vector3(-offsetX, offsetY, offsetZ) * _blockMultiplier;
             startPosition = defaultPosition + offsetPosition;
         }
 
