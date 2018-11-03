@@ -26,7 +26,7 @@ namespace AnotherAutoRigger
             targetTransform = this.GetComponentInGameObjectFromString<Transform>(target);
         }
 
-        void Update()
+        void LateUpdate()
         {
             // validate target
             if (targetTransform == null)

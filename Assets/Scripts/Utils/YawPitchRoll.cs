@@ -31,6 +31,48 @@ namespace AnotherAutoRigger
         private int yawIndex = 0;
         private int pitchIndex = 1;
         private int rollIndex = 2;
+        private Vector3 yawPitchRoll;
+
+        private Quaternion GetLocalRotation()
+        {
+            // validate transforms
+            if (origin == null || insertion == null)
+                return Quaternion.identity;
+
+            // convert transforms to 4x4 matrices
+            Matrix4x4 parentMatrix = Matrix4x4.TRS(originTransform.position, originTransform.rotation, originTransform.localScale);
+            Matrix4x4 childMatrix = Matrix4x4.TRS(insertionTransform.position, insertionTransform.rotation, insertionTransform.localScale);
+
+            // get local transformation matrix of child
+            Matrix4x4 localMatrix =  (parentOffsetMatrix * parentMatrix).inverse * childMatrix;
+            return localMatrix.rotation;
+        }
+
+        private Vector3 CalculateYawPitchRoll()
+        {
+            // calculate yaw pitch roll
+            Quaternion rotation = GetLocalRotation();
+            float yaw = Mathf.Asin(2 * rotation.x * rotation.y + 2 * rotation.z * rotation.w);
+            float pitch = Mathf.Atan2(2 * rotation.x * rotation.w - 2 * rotation.y * rotation.z, 1 - 2 * rotation.x * rotation.x - 2 * rotation.z * rotation.z);
+            float roll = Mathf.Atan2(2 * rotation.y * rotation.w - 2 * rotation.x * rotation.z, 1 - 2 * rotation.y * rotation.y - 2 * rotation.z * rotation.z);
+
+            // populate yaw pitch roll vector
+            Vector3 yawPitchRoll = new Vector3();
+            yawPitchRoll[yawIndex] = yaw * Mathf.Rad2Deg;
+            yawPitchRoll[pitchIndex] = pitch * Mathf.Rad2Deg * -1;
+            yawPitchRoll[rollIndex] = roll * Mathf.Rad2Deg * -1;
+
+            return yawPitchRoll;
+        }
+
+        // -------------------------------------------------------------------------
+
+        public Vector3 GetYawPitchRoll()
+        {
+            return yawPitchRoll;
+        }
+
+        // -------------------------------------------------------------------------
 
         void Awake()
         {
@@ -58,35 +100,9 @@ namespace AnotherAutoRigger
             rollIndex = mappingList.IndexOf(mappingString[2].ToString());
         }
 
-        private Quaternion GetLocalRotation () {
-            // validate transforms
-            if (origin == null || insertion == null)
-                return Quaternion.identity;
-
-            // convert transforms to 4x4 matrices
-            Matrix4x4 parentMatrix = Matrix4x4.TRS(originTransform.position, originTransform.rotation, originTransform.localScale);
-            Matrix4x4 childMatrix = Matrix4x4.TRS(insertionTransform.position, insertionTransform.rotation, insertionTransform.localScale);
-
-            // get local transformation matrix of child
-            Matrix4x4 localMatrix = childMatrix * (parentMatrix * parentOffsetMatrix).inverse;
-            return localMatrix.rotation;
-        }
-
-        public Vector3 GetYawPitchRoll()
+        void Update()
         {
-            // calculate yaw pitch roll
-            Quaternion rotation = GetLocalRotation();
-            float yaw = Mathf.Asin(2 * rotation.x * rotation.y + 2 * rotation.z * rotation.w);
-            float pitch = Mathf.Atan2(2 * rotation.x * rotation.w - 2 * rotation.y * rotation.z, 1 - 2 * rotation.x * rotation.x - 2 * rotation.z * rotation.z);
-            float roll = Mathf.Atan2(2 * rotation.y * rotation.w - 2 * rotation.x * rotation.z, 1 - 2 * rotation.y * rotation.y - 2 * rotation.z * rotation.z);
-
-            // populate yaw pitch roll vector
-            Vector3 yawPitchRoll = new Vector3();
-            yawPitchRoll[yawIndex] = yaw * Mathf.Rad2Deg *-1;
-            yawPitchRoll[pitchIndex] = pitch * Mathf.Rad2Deg * -1;
-            yawPitchRoll[rollIndex] = roll * Mathf.Rad2Deg * -1;
-
-            return yawPitchRoll;
+            yawPitchRoll = CalculateYawPitchRoll();
         }
     }
 }

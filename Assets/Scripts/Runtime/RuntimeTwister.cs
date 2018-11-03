@@ -13,7 +13,7 @@ namespace AnotherAutoRigger
         public float multiplier = 5f;
         public int _blockMultiplier = 1;
 
-        void Update() {
+        void LateUpdate() {
             // validate pose reader
             if (poseReader == null)
                 return;

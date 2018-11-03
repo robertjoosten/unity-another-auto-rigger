@@ -56,7 +56,7 @@ namespace AnotherAutoRigger
             startPosition = defaultPosition + offsetPosition;
         }
 
-        void Update()
+        void LateUpdate()
         {
             // validate pose reader
             if (poseReader == null)
