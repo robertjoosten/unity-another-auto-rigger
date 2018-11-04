@@ -6,7 +6,6 @@ using AnotherAutoRigger;
 namespace AnotherAutoRigger
 {
     [System.Serializable]
-    [ExecuteInEditMode]
     public class RuntimeTwister : YawPitchRollInherit
     {
         [Header("[Multiplier Attributes]")]

@@ -5,7 +5,6 @@ using UnityEngine;
 namespace AnotherAutoRigger
 {
     [System.Serializable]
-    [ExecuteInEditMode]
     public class YawPitchRoll : MonoBehaviour
     {
         public enum MappingOptions { ZXY, XYZ, XZY, YXZ, YZX, ZYX };
