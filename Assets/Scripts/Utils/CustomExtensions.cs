@@ -10,6 +10,7 @@ namespace AnotherAutoRigger
     {
         public static List<string> GetKeys(this SimpleJSON.JSONNode dict)
         {
+            // get keys from JSONNode dictionary as a list
             List<string> keys = new List<string>();
             foreach (var key in dict.Keys)
                 keys.Add(key);
@@ -22,14 +23,16 @@ namespace AnotherAutoRigger
     {
         public static void AddMany<T>(this List<T> list, params T[] elements)
         {
+            // add items to list in one liner
             list.AddRange(elements);
         }
     }
 
     public static class GameObjectExtension
     { 
-        public static string GetNamespace(this GameObject gameObject)
+        public static string GetMayaStyleNamespace(this GameObject gameObject)
         {
+            // get Maya style namespace from name of gameobject
             if (gameObject.name.Contains(":"))
             {
                 List<string> split = gameObject.name.Split(':').ToList();
@@ -45,6 +48,7 @@ namespace AnotherAutoRigger
     {
         public static T GetComponentInGameObjectFromString<T>(this MonoBehaviour script, string objName)
         {
+            // get component from gameobject which is found with a string
             GameObject obj = GameObject.Find(objName);
             if (obj == null)
                 return default(T);

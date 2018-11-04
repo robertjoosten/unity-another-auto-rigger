@@ -9,9 +9,13 @@ public class YawPitchRollEditor : Editor
     {
         DrawDefaultInspector();
 
-        // populate transforms
+        // get script
         YawPitchRoll script = (YawPitchRoll)target;
-        script.originTransform = script.GetComponentInGameObjectFromString<Transform>(script.origin);
-        script.insertionTransform = script.GetComponentInGameObjectFromString<Transform>(script.insertion);
+
+        // populate transforms
+        if (script.originTransform == null)
+            script.originTransform = script.GetComponentInGameObjectFromString<Transform>(script.origin);
+        if (script.insertionTransform == null)
+            script.insertionTransform = script.GetComponentInGameObjectFromString<Transform>(script.insertion);
     }
 }
