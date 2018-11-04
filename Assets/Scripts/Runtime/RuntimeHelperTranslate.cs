@@ -6,6 +6,7 @@ using AnotherAutoRigger;
 namespace AnotherAutoRigger
 {
     [System.Serializable]
+    [ExecuteInEditMode]
     public class RuntimeHelperTranslate : YawPitchRollInherit
     {
         [Header("[Multiplier Attributes]")]
