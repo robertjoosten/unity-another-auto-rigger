@@ -19,17 +19,23 @@ namespace AnotherAutoRigger
         [Space(5)]
         public int _blockMultiplier = 1;
 
+        private bool isValid;
         private Vector3 xDirection = new Vector3(1, 0, 0);
 
         void Awake()
         {
-            targetTransform = this.GetComponentInGameObjectFromString<Transform>(target);
+            // populate transforms
+            if (targetTransform == null)
+                targetTransform = this.GetComponentInGameObjectFromString<Transform>(target);
+
+            // validate
+            isValid = (targetTransform == null) ? false : true;
         }
 
         void LateUpdate()
         {
-            // validate target
-            if (targetTransform == null)
+            // only continue when helper is valid
+            if (!isValid)
                 return;
 
             // get parent x vector

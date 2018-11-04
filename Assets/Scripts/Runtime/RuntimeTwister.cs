@@ -13,9 +13,17 @@ namespace AnotherAutoRigger
         public float multiplier = 5f;
         public int _blockMultiplier = 1;
 
+        private bool isValid;
+
+        void Awake()
+        {
+            // validate
+            isValid = (poseReader == null) ? false : true;
+        }
+
         void LateUpdate() {
-            // validate pose reader
-            if (poseReader == null)
+            // only continue when twister is valid
+            if (!isValid)
                 return;
 
             // get twist value

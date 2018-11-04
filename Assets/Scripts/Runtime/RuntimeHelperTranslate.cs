@@ -32,13 +32,24 @@ namespace AnotherAutoRigger
         public float _defaultPositionY;
         public float _defaultPositionZ;
 
+        private bool isValid;
         private Vector3 defaultPosition;
         private Vector3 startPosition;
         private AnimationCurve defaultCurve;
         private float defaultLength;
 
+        void Awake()
+        {
+            // store valid state
+            isValid = (poseReader == null) ? false : true;
+        }
+
         void Start()
         {
+            // only continue when helper is valid
+            if (!isValid)
+                return;
+
             // construct default values
             defaultPosition = new Vector3(-_defaultPositionX, _defaultPositionY, _defaultPositionZ);
             defaultLength = defaultPosition.magnitude;
@@ -58,8 +69,8 @@ namespace AnotherAutoRigger
 
         void LateUpdate()
         {
-            // validate pose reader
-            if (poseReader == null)
+            // only continue when helper is valid
+            if (!isValid)
                 return;
 
             // extract twist value on prefered axis

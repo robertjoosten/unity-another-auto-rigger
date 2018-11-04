@@ -27,6 +27,7 @@ namespace AnotherAutoRigger
         public float _parentOffsetY;
         public float _parentOffsetZ;
 
+        private bool isValid;
         private Matrix4x4 parentOffsetMatrix;
         private int yawIndex = 0;
         private int pitchIndex = 1;
@@ -36,12 +37,20 @@ namespace AnotherAutoRigger
         private Quaternion GetLocalRotation()
         {
             // validate transforms
-            if (origin == null || insertion == null)
+            if (originTransform == null || insertionTransform == null)
                 return Quaternion.identity;
 
             // convert transforms to 4x4 matrices
-            Matrix4x4 parentMatrix = Matrix4x4.TRS(originTransform.position, originTransform.rotation, originTransform.localScale);
-            Matrix4x4 childMatrix = Matrix4x4.TRS(insertionTransform.position, insertionTransform.rotation, insertionTransform.localScale);
+            Matrix4x4 parentMatrix = Matrix4x4.TRS(
+                originTransform.position, 
+                originTransform.rotation, 
+                originTransform.localScale
+            );
+            Matrix4x4 childMatrix = Matrix4x4.TRS(
+                insertionTransform.position, 
+                insertionTransform.rotation, 
+                insertionTransform.localScale
+            );
 
             // get local transformation matrix of child
             Matrix4x4 localMatrix =  (parentOffsetMatrix * parentMatrix).inverse * childMatrix;
@@ -77,12 +86,21 @@ namespace AnotherAutoRigger
         void Awake()
         {
             // populate transforms
-            originTransform = this.GetComponentInGameObjectFromString<Transform>(origin);
-            insertionTransform = this.GetComponentInGameObjectFromString<Transform>(insertion);
+            if (originTransform == null)
+                originTransform = this.GetComponentInGameObjectFromString<Transform>(origin);
+            if (insertionTransform == null)
+                insertionTransform = this.GetComponentInGameObjectFromString<Transform>(insertion);
+
+            // validate
+            isValid = (originTransform == null || insertionTransform == null) ? false : true;
         }
 
         void Start()
         {
+            // only continue when yaw pitch roll is valid
+            if (!isValid)
+                return;
+
             // construct offset rotation on parent
             Quaternion offsetQuat = Quaternion.Euler(_parentOffsetX, _parentOffsetY, _parentOffsetZ);
             parentOffsetMatrix = Matrix4x4.Rotate(offsetQuat);
@@ -102,6 +120,11 @@ namespace AnotherAutoRigger
 
         void Update()
         {
+            // only continue when yaw pitch roll is valid
+            if (!isValid)
+                return;
+
+            // calculate yaw pitch roll
             yawPitchRoll = CalculateYawPitchRoll();
         }
     }
