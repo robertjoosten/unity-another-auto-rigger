@@ -9,8 +9,11 @@ public class RuntimeHelperAimEditor : Editor
     {
         DrawDefaultInspector();
 
-        // populate transforms
+        // get script
         RuntimeHelperAim script = (RuntimeHelperAim)target;
-        script.targetTransform = script.GetComponentInGameObjectFromString<Transform>(script.target);
+
+        // populate transforms
+        if (script.targetTransform == null)
+            script.targetTransform = script.GetComponentInGameObjectFromString<Transform>(script.target);
     }
 }

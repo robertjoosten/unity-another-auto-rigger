@@ -9,7 +9,10 @@ public class ObjectBuilderEditor : Editor
     {
         DrawDefaultInspector();
 
+        // get script
         RuntimeManager script = (RuntimeManager)target;
+
+        // create button
         if (GUILayout.Button("Build Runtime Skeleton"))
         {
             string filePath = EditorUtility.OpenFilePanel("Load skeleton preset", "", "skeletonPreset");

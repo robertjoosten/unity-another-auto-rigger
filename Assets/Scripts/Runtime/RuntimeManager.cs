@@ -19,7 +19,8 @@ namespace AnotherAutoRigger
         { 
             "RuntimeTwister",
             "RuntimeHelperTranslate",
-            "RuntimeHelperAim"
+            "RuntimeHelperAim",
+            "RuntimeMuscle"
         };
 
         // -------------------------------------------------------------------------
@@ -181,13 +182,16 @@ namespace AnotherAutoRigger
             runtimeDataKeys = runtimeDataDict.GetKeys();
 
             // get namespace
-            namespacePrefix = gameObject.GetNamespace();
+            namespacePrefix = gameObject.GetMayaStyleNamespace();
 
             // process runtime objects
             ProcessRuntimeObjects();
 
             // process yaw pitch roll objects
-            ProcessYawPitchRollObjects();            
+            ProcessYawPitchRollObjects();
+
+            // log completion
+            Debug.Log("Skeleton preset succesfully applied");
         }
     }
 }

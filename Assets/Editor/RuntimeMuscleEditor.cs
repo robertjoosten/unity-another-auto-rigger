@@ -2,15 +2,15 @@
 using UnityEditor;
 using AnotherAutoRigger;
 
-[CustomEditor(typeof(YawPitchRoll))]
-public class YawPitchRollEditor : Editor
+[CustomEditor(typeof(RuntimeMuscle))]
+public class RuntimeMuscleEditor : Editor
 {
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
 
         // get script
-        YawPitchRoll script = (YawPitchRoll)target;
+        RuntimeMuscle script = (RuntimeMuscle)target;
 
         // populate transforms
         if (script.originTransform == null)
