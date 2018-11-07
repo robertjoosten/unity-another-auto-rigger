@@ -348,8 +348,6 @@ namespace AnotherAutoRigger
             // get joint rotation
             Vector3 worldJointForward = GetTransformForwardVector();
             Vector3 worldJointUp = Vector3.Lerp(worldOriginUp, worldInsertionUp, blend * 0.1f);
-
-            // set joint values
             Quaternion worldJointRot = Quaternion.LookRotation(worldJointForward, worldJointUp);
 
             if (useDynamics == false)
