@@ -21,6 +21,14 @@ namespace AnotherAutoRigger
         public float blend = 5f;
         public float slide = 0f;
 
+        [Header("[Dynamic Attributes]")]
+        [Space(5)]
+        public bool useDynamics = true;
+        public float stiffness = 0.33f;
+        public float mass = 0.9f;
+        public float damping = 0.4f;
+        public float gravity = 0f;
+
         [Header("[Origin Attributes]")]
         [Space(5)]
         public float _originX;
@@ -59,7 +67,7 @@ namespace AnotherAutoRigger
 
         private bool isValid;
         private float defaultLength;
- 
+
         private Vector3 localOrigin;
         private Vector3 localOriginTangent;
         private Vector3 localOriginUp;
@@ -78,6 +86,12 @@ namespace AnotherAutoRigger
         private Vector3 localInsertionTangentVector;
         private Quaternion localOriginTangentOffset;
         private Quaternion localInsertionTangentOffset;
+
+        private Vector3 massVector;
+        private Vector3 gravityVector;
+        private Vector3 force;
+        private Vector3 acceleration;
+        private Vector3 velocity;
 
         private void InitializeLocalVectors()
         {
@@ -135,8 +149,8 @@ namespace AnotherAutoRigger
         }
 
         private Vector3 CalculateTangentPosition(
-            Vector3 source, Vector3 target, Vector3 up, 
-            Vector3 posOffset, Quaternion rotationOffset, 
+            Vector3 source, Vector3 target, Vector3 up,
+            Vector3 posOffset, Quaternion rotationOffset,
             float scale, float rotation
         )
         {
@@ -182,7 +196,7 @@ namespace AnotherAutoRigger
                 t * t * t * worldInsertion;
         }
 
-        public Vector3 GetTransformForwardVector()
+        private Vector3 GetTransformForwardVector()
         {
             // get bezier forward vector
             float t = GetSlideValue();
@@ -195,7 +209,7 @@ namespace AnotherAutoRigger
 
         // -------------------------------------------------------------------------
 
-        public bool ValidateMuscle()
+        private bool ValidateMuscle()
         {
             // validate settings, if the tangents or the ups are set to zero means
             // that the muscle position cannot be calculated. It also check if the
@@ -206,6 +220,33 @@ namespace AnotherAutoRigger
                 return false;
             return true;
         }
+
+        // -------------------------------------------------------------------------
+
+        private void SetTransform(Vector3 position, Quaternion rotation)
+        { 
+            // set transform position and rotation
+            transform.position = position;
+            transform.rotation = rotation;
+        }
+
+        private void SetTransformDynamic(Vector3 position, Quaternion rotation)
+        {
+            // calculate force
+            force = (position - transform.position) * stiffness;
+            force -= gravityVector;
+
+            // calculate acceleration
+            acceleration = force / mass;
+
+            // calculate velocity
+            velocity += acceleration * (1 - damping);
+
+            // set transform position and rotation
+            transform.position += velocity + force;
+            transform.rotation = rotation;
+        }
+
 
         // -------------------------------------------------------------------------
 
@@ -243,9 +284,9 @@ namespace AnotherAutoRigger
 
             // get tangent offset rotation
             localOriginTangentOffset = CalculateTangentRotationOffset(
-                worldOrigin, 
+                worldOrigin,
                 worldInsertion,
-                worldOriginTangent, 
+                worldOriginTangent,
                 worldOriginUp
             );
             localInsertionTangentOffset = CalculateTangentRotationOffset(
@@ -254,6 +295,10 @@ namespace AnotherAutoRigger
                 worldInsertionTangent,
                 worldInsertionUp
             );
+
+            // set dynamics vectors
+            massVector = new Vector3(mass, mass, mass);
+            gravityVector = new Vector3(0, gravity / 10, 0);
         }
 
         void LateUpdate()
@@ -298,15 +343,21 @@ namespace AnotherAutoRigger
             );
 
             // get joint position
-            Vector3 jointWorldPos = GetTransformPosition();
+            Vector3 worldJointPos = GetTransformPosition();
 
             // get joint rotation
-            Vector3 jointWorldForward = GetTransformForwardVector();
-            Vector3 jointWorldUp = Vector3.Lerp(worldOriginUp, worldInsertionUp, blend * 0.1f);
+            Vector3 worldJointForward = GetTransformForwardVector();
+            Vector3 worldJointUp = Vector3.Lerp(worldOriginUp, worldInsertionUp, blend * 0.1f);
 
             // set joint values
-            transform.position = jointWorldPos;
-            transform.rotation = Quaternion.LookRotation(jointWorldForward, jointWorldUp);
+            Quaternion worldJointRot = Quaternion.LookRotation(worldJointForward, worldJointUp);
+
+            if (useDynamics == false)
+                // set transform without dynamics
+                SetTransform(worldJointPos, worldJointRot);
+            else
+                // set transform with dynamics
+                SetTransformDynamic(worldJointPos, worldJointRot);
         }
     }
 }
