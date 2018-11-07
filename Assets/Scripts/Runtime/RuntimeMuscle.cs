@@ -23,7 +23,7 @@ namespace AnotherAutoRigger
 
         [Header("[Dynamic Attributes]")]
         [Space(5)]
-        public bool useDynamics = true;
+        public bool useDynamics = false;
         public float stiffness = 0.33f;
         public float mass = 0.9f;
         public float damping = 0.4f;
