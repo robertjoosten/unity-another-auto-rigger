@@ -1,14 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using AnotherAutoRigger;
+﻿using UnityEngine;
 
 namespace AnotherAutoRigger
 {
-    public class YawPitchRollInherit : MonoBehaviour
+    public class YawPitchRollSetter : MonoBehaviour
     {
-        [Header("[Pose Reader]")]
-        [Space(5)]
         public YawPitchRoll poseReader;
     }
 }

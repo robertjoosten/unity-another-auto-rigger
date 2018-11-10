@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using UnityEditor;
-using AnotherAutoRigger;
+﻿using UnityEditor;
 
 namespace AnotherAutoRigger
 {
@@ -11,6 +9,15 @@ namespace AnotherAutoRigger
         {
             // get script
             RuntimeTwister script = (RuntimeTwister)target;
+
+            // build pose reader
+            EditorGUILayout.LabelField("Pose Reader", EditorStyles.boldLabel);
+            script.poseReader = (YawPitchRoll)EditorGUILayout.ObjectField(
+                "Pose Reader",
+                script.poseReader,
+                typeof(YawPitchRoll),
+                true
+            );
 
             // build settings
             EditorGUILayout.LabelField("Settings", EditorStyles.boldLabel);

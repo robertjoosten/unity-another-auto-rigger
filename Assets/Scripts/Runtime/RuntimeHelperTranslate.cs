@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using AnotherAutoRigger;
+﻿using UnityEngine;
 
 namespace AnotherAutoRigger
 {
     [System.Serializable]
-    public class RuntimeHelperTranslate : YawPitchRollInherit
+    public class RuntimeHelperTranslate : YawPitchRollSetter
     {
         // settings
         public float multiplier = 1;

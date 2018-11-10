@@ -1,10 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SimpleJSON;
-using AnotherAutoRigger;
 
 namespace AnotherAutoRigger
 {
@@ -162,7 +160,7 @@ namespace AnotherAutoRigger
                         Type runtimeObjectType = Type.GetType(runtimeObjectString);
 
                         // get runtime object on joint
-                        var runtimeObject = connectedJoint.GetComponent(runtimeObjectType) as YawPitchRollInherit;
+                        var runtimeObject = connectedJoint.GetComponent(runtimeObjectType) as YawPitchRollSetter;
                         if (runtimeObject == null)
                             continue;
 
