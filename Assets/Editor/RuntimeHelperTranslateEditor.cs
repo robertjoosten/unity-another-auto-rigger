@@ -67,7 +67,7 @@ namespace AnotherAutoRigger
 
             // build offset position
             offsetPosition.Set(script.offsetX, script.offsetY, script.offsetZ);
-            offsetPosition = EditorGUILayout.Vector3Field("Default Position", offsetPosition);
+            offsetPosition = EditorGUILayout.Vector3Field("Offset Position", offsetPosition);
             script.offsetX = offsetPosition.x;
             script.offsetY = offsetPosition.y;
             script.offsetZ = offsetPosition.z;
