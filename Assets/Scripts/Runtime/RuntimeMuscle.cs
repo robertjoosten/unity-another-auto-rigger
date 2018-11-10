@@ -8,66 +8,51 @@ namespace AnotherAutoRigger
     [System.Serializable]
     public class RuntimeMuscle : MonoBehaviour
     {
-        [HideInInspector] public string origin;
-        [HideInInspector] public string insertion;
-        [Header("[Transforms]")]
-        [Space(5)]
+        // transforms
+        public string origin;
+        public string insertion;
         public Transform originTransform;
         public Transform insertionTransform;
 
-        [Header("[Multiplier Attributes]")]
-        [Space(5)]
+        // settings
         public float multiplier = 5f;
         public float blend = 5f;
         public float slide = 0f;
 
-        [Header("[Dynamic Attributes]")]
-        [Space(5)]
-        public bool useDynamics = false;
+        // dynamics
+        public bool enableDynamics = false;
         public float stiffness = 0.33f;
         public float mass = 0.9f;
         public float damping = 0.4f;
         public float gravity = 0f;
 
-        [Header("[Origin Attributes]")]
-        [Space(5)]
+        // origin
         public float _originX;
         public float _originY;
         public float _originZ;
-
-        [Header("[Origin Tangent Attributes]")]
-        [Space(5)]
         public float _originTangentX;
         public float _originTangentY;
         public float _originTangentZ;
-
-        [Header("[Origin Up Attributes]")]
-        [Space(5)]
         public float _originUpX;
         public float _originUpY;
         public float _originUpZ;
 
-        [Header("[Insertion Attributes]")]
-        [Space(5)]
+        // insertion
         public float _insertionX;
         public float _insertionY;
         public float _insertionZ;
-
-        [Header("[Insertion Tangent Attributes]")]
-        [Space(5)]
         public float _insertionTangentX;
         public float _insertionTangentY;
         public float _insertionTangentZ;
-
-        [Header("[Insertion Up Attributes]")]
-        [Space(5)]
         public float _insertionUpX;
         public float _insertionUpY;
         public float _insertionUpZ;
 
+        // private
         private bool isValid;
         private float defaultLength;
 
+        // private local
         private Vector3 localOrigin;
         private Vector3 localOriginTangent;
         private Vector3 localOriginUp;
@@ -75,6 +60,12 @@ namespace AnotherAutoRigger
         private Vector3 localInsertionTangent;
         private Vector3 localInsertionUp;
 
+        private Vector3 localOriginTangentVector;
+        private Vector3 localInsertionTangentVector;
+        private Quaternion localOriginTangentOffset;
+        private Quaternion localInsertionTangentOffset;
+
+        // private world
         private Vector3 worldOrigin;
         private Vector3 worldOriginTangent;
         private Vector3 worldOriginUp;
@@ -82,12 +73,7 @@ namespace AnotherAutoRigger
         private Vector3 worldInsertionTangent;
         private Vector3 worldInsertionUp;
 
-        private Vector3 localOriginTangentVector;
-        private Vector3 localInsertionTangentVector;
-        private Quaternion localOriginTangentOffset;
-        private Quaternion localInsertionTangentOffset;
-
-        private Vector3 massVector;
+        // private dynamics
         private Vector3 gravityVector;
         private Vector3 force;
         private Vector3 acceleration;
@@ -297,8 +283,7 @@ namespace AnotherAutoRigger
             );
 
             // set dynamics vectors
-            massVector = new Vector3(mass, mass, mass);
-            gravityVector = new Vector3(0, gravity / 10, 0);
+            gravityVector.Set(0, gravity / 10, 0);
         }
 
         void LateUpdate()
@@ -350,7 +335,7 @@ namespace AnotherAutoRigger
             Vector3 worldJointUp = Vector3.Lerp(worldOriginUp, worldInsertionUp, blend * 0.1f);
             Quaternion worldJointRot = Quaternion.LookRotation(worldJointForward, worldJointUp);
 
-            if (useDynamics == false)
+            if (enableDynamics == false)
                 // set transform without dynamics
                 SetTransform(worldJointPos, worldJointRot);
             else

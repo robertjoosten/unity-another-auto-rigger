@@ -7,25 +7,22 @@ namespace AnotherAutoRigger
     [System.Serializable]
     public class YawPitchRoll : MonoBehaviour
     {
-        public enum MappingOptions { ZXY, XYZ, XZY, YXZ, YZX, ZYX };
-
-        [Header("[Yaw-Pitch-Roll Mapper]")]
-        [Space(5)]
+        // mapping options
+        public enum MappingOptions { ZXY=0, XYZ=1, XZY=2, YXZ=3, YZX=4, ZYX=5 };
         public MappingOptions mapping;
 
-        [HideInInspector] public string origin;
-        [HideInInspector] public string insertion;
-        [Header("[Transforms]")]
-        [Space(5)]
+        // transforms
+        public string origin;
+        public string insertion;
         public Transform originTransform;
         public Transform insertionTransform;
 
-        [Header("[Euler Offset]")]
-        [Space(5)]
+        // euler offset
         public float _parentOffsetX;
         public float _parentOffsetY;
         public float _parentOffsetZ;
 
+        // private
         private bool isValid;
         private Matrix4x4 parentOffsetMatrix;
         private int yawIndex = 0;

@@ -8,11 +8,11 @@ namespace AnotherAutoRigger
     [System.Serializable]
     public class RuntimeTwister : YawPitchRollInherit
     {
-        [Header("[Multiplier Attributes]")]
-        [Space(5)]
+        // settings
         public float multiplier = 5f;
         public int _blockMultiplier = 1;
 
+        // private
         private bool isValid;
 
         void Awake()

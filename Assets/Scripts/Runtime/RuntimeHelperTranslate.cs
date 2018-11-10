@@ -8,30 +8,27 @@ namespace AnotherAutoRigger
     [System.Serializable]
     public class RuntimeHelperTranslate : YawPitchRollInherit
     {
-        [Header("[Multiplier Attributes]")]
-        [Space(5)]
+        // settings
         public float multiplier = 1;
         public int _directionMultiplier = 1;
         public int _blockMultiplier = 1;
 
-        [Header("[Offset Attributes]")]
-        [Space(5)]
+        // curve extremes
+        public float _negValue = -1;
+        public float _posValue = 1;
+
+        // offset position
         public float offsetX;
         public float offsetY;
         public float offsetZ;
 
-        [Header("[Curve Attributes]")]
-        [Space(5)]
-        public float _negValue = -1;
-        public float _posValue = 1;
-
-        [Header("[Default Attributes]")]
-        [Space(5)]
+        // default position
         public int _defaultAxis;
         public float _defaultPositionX;
         public float _defaultPositionY;
         public float _defaultPositionZ;
 
+        // private
         private bool isValid;
         private Vector3 defaultPosition;
         private Vector3 startPosition;

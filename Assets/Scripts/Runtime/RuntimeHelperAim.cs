@@ -8,16 +8,12 @@ namespace AnotherAutoRigger
     [System.Serializable]
     public class RuntimeHelperAim : MonoBehaviour
     {
-        [HideInInspector]public string target;
-
-        [Header("[Transforms]")]
-        [Space(5)]
+        // settings
+        public string target;
         public Transform targetTransform;
-
-        [Header("[Multiplier Attributes]")]
-        [Space(5)]
         public int _blockMultiplier = 1;
 
+        // private
         private bool isValid;
         private Vector3 xDirection = new Vector3(1, 0, 0);
 
