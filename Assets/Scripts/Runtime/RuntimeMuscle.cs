@@ -17,8 +17,8 @@ namespace AnotherAutoRigger
         public float slide = 0f;
 
         // dynamics
-        public bool enableDynamics = false;
-        public float stiffness = 0.33f;
+        public bool enableDynamics = true;
+        public float stiffness = 0.75f;
         public float mass = 0.9f;
         public float damping = 0.4f;
         public float gravity = 0f;
