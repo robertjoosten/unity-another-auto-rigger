@@ -4,7 +4,8 @@
 !LICENSE
 !README.md
 !Assets/
-!submodules/
+!Assets/
+!Examples/
 Assets/*
 !Assets/Scripts/
 !Assets/Editor/
