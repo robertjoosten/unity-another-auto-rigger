@@ -11,6 +11,10 @@ namespace AnotherAutoRigger
             // get script
             RuntimeManager script = (RuntimeManager)target;
 
+            // set debug mode, the debug mode will create spheres on each of 
+            // the joint that are driven at runtime.
+            script.isDebug = true;
+
             // create button
             if (GUILayout.Button("Build Runtime Skeleton"))
             {

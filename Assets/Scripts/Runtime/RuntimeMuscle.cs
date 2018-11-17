@@ -216,7 +216,7 @@ namespace AnotherAutoRigger
         private void SetTransformDynamic(Vector3 position, Quaternion rotation)
         {
             // calculate force
-            force = (position - transform.position) * stiffness;
+            force = (position - transform.position) * stiffness * 10;
             force -= gravityVector;
 
             // calculate acceleration
@@ -226,7 +226,7 @@ namespace AnotherAutoRigger
             velocity += acceleration * (1 - damping);
 
             // set transform position and rotation
-            transform.position += velocity + force;
+            transform.position += ((velocity + force) * Time.deltaTime);
             transform.rotation = rotation;
         }
 

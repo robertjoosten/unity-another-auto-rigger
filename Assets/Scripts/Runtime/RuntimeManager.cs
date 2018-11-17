@@ -9,6 +9,8 @@ namespace AnotherAutoRigger
     [System.Serializable]
     public class RuntimeManager : MonoBehaviour
     {
+        public bool isDebug = false;
+
         private string namespacePrefix;
         private string typePrefix = "AnotherAutoRigger.";
         private SimpleJSON.JSONNode runtimeDataDict;
@@ -19,6 +21,13 @@ namespace AnotherAutoRigger
             "RuntimeHelperTranslate",
             "RuntimeHelperAim",
             "RuntimeMuscle"
+        };
+        private List<Color> runtimeObjectColors = new List<Color>
+        {
+            Color.green,
+            Color.yellow,
+            Color.yellow,
+            Color.red
         };
 
         // -------------------------------------------------------------------------
@@ -63,9 +72,12 @@ namespace AnotherAutoRigger
 
         private void ProcessRuntimeObjects()
         {
-            // loop runtime object names
-            foreach (string runtimeObjectName in runtimeObjectNames)
-            {
+            // loop runtime object variables
+            for (int i = 0; i < runtimeObjectNames.Count; i++) {
+                // get name and color
+                string runtimeObjectName = runtimeObjectNames[i];
+                Color runtimeObjectColor = runtimeObjectColors[i];
+
                 // skip if runtime object is not part of data provided
                 if (!runtimeDataKeys.Contains(runtimeObjectName))
                     continue;
@@ -100,6 +112,14 @@ namespace AnotherAutoRigger
                         runtimeObjectData, 
                         runtimeObject
                     );
+
+                    // validate debug gameobject creation
+                    string debugName = runtimeJoint.name + "_DEBUG";
+                    if (isDebug == false || runtimeJoint.transform.Find(debugName) != null)
+                        continue;
+
+                    // create apply debug runtime object
+                    applyDebugGameObject(debugName, runtimeJoint, runtimeObjectColor);
                 }
             }
         }
@@ -169,6 +189,29 @@ namespace AnotherAutoRigger
                     }
                 }
             }
+        }
+
+        // -------------------------------------------------------------------------
+
+        private void applyDebugGameObject(string debugName, GameObject joint, Color color)
+        {
+            // create debug objects
+            GameObject debug = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            debug.name = debugName;
+
+            // parent debug object
+            debug.transform.parent = joint.transform;
+            debug.transform.localPosition = Vector3.zero;
+            debug.transform.localRotation = Quaternion.identity;
+            debug.transform.localScale = new Vector3(0.015f, 0.015f, 0.015f);
+
+            // create material
+            Material material = new Material(Shader.Find("Custom/AlwaysRender"));
+            material.color = color;
+
+            // assign material
+            Renderer renderer = debug.GetComponent<Renderer>();
+            renderer.material = material;
         }
 
         // -------------------------------------------------------------------------
