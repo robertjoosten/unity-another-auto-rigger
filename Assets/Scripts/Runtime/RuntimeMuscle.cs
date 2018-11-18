@@ -3,7 +3,7 @@
 namespace AnotherAutoRigger
 {
     [System.Serializable]
-    public class RuntimeMuscle : MonoBehaviour
+    public class RuntimeMuscle : DebugSetter
     {
         // transforms
         public string origin;
@@ -44,6 +44,9 @@ namespace AnotherAutoRigger
         public float _insertionUpX;
         public float _insertionUpY;
         public float _insertionUpZ;
+
+        // debug
+        public override Color DebugColor { get { return Color.red; } }
 
         // private
         private bool isValid;
@@ -339,5 +342,5 @@ namespace AnotherAutoRigger
                 // set transform with dynamics
                 SetTransformDynamic(worldJointPos, worldJointRot);
         }
-    }
+    }   
 }

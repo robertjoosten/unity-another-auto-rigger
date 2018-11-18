@@ -2,7 +2,7 @@
 
 namespace AnotherAutoRigger
 {
-    public class YawPitchRollSetter : MonoBehaviour
+    public class YawPitchRollSetter : DebugSetter
     {
         public YawPitchRoll poseReader;
     }

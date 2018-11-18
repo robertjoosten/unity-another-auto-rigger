@@ -6,12 +6,16 @@ using AnotherAutoRigger;
 namespace AnotherAutoRigger
 {
     [System.Serializable]
-    public class RuntimeHelperAim : MonoBehaviour
+    public class RuntimeHelperAim : DebugSetter
     {
         // settings
         public string target;
         public Transform targetTransform;
         public int _blockMultiplier = 1;
+
+        // debug
+        public override float DebugSize { get { return 0.005f; } }
+        public override Color DebugColor { get { return Color.yellow; } }
 
         // private
         private bool isValid;

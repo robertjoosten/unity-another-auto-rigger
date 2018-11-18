@@ -11,16 +11,20 @@ namespace AnotherAutoRigger
             // get script
             RuntimeManager script = (RuntimeManager)target;
 
-            // set debug mode, the debug mode will create spheres on each of 
-            // the joint that are driven at runtime.
-            script.isDebug = true;
-
             // create button
             if (GUILayout.Button("Build Runtime Skeleton"))
             {
                 string filePath = EditorUtility.OpenFilePanel("Load skeleton preset", "", "skeletonPreset");
                 script.BuildRuntimeSkeleton(filePath);
             }
+
+            // set debug mode, the debug mode will draw spheres on each of 
+            // the joint that are driven at runtime.
+            script.debugDisplay = EditorGUILayout.ToggleLeft("Display Debug Gizmos", script.debugDisplay);
+            script.SetDebugState();
+
+            // redraw scene
+            SceneView.RepaintAll();
         }
     }
 }

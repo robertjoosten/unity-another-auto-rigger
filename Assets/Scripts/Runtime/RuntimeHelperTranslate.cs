@@ -25,6 +25,9 @@ namespace AnotherAutoRigger
         public float _defaultPositionY;
         public float _defaultPositionZ;
 
+        // debug
+        public override Color DebugColor { get { return Color.yellow; } }
+
         // private
         private bool isValid;
         private Vector3 defaultPosition;

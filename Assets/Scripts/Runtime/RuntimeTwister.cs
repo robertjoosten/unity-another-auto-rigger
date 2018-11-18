@@ -9,6 +9,10 @@ namespace AnotherAutoRigger
         public float multiplier = 5f;
         public int _blockMultiplier = 1;
 
+        // debug
+        public override float DebugSize { get { return 0.0075f; } }
+        public override Color DebugColor { get { return Color.green; } }
+
         // private
         private bool isValid;
 
