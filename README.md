@@ -16,7 +16,7 @@ The auto rigger contains a lot of helper joints, these helper joints are not goi
 
 
 ## Runtime Helper
-The runtime helper setup contains 2 different scripts. The helper joints are used to preserve volume in areas like the hips, knee, wrist, elbow etc.
+The runtime helper setup contains 2 different scripts. The helper joints are used to preserve volume in areas like the hips, knee, wrist, elbow etc. The helper translate script will preserve volume by translating the joint based on rotational values and the helper aim joint will preserve volume aiming its joint towards a target. The aim joint is a child of the translate joint.
 
 <p align="center">
 <img src="Examples/runtimeHelper.gif" alt="Runtime Helper Example"><br>
@@ -34,7 +34,7 @@ The runtime helper setup contains 2 different scripts. The helper joints are use
 </p>
 
 ## Runtime Twister
-The runtime twister can split the twist value of a parent joint and only apply a fraction of that to the helper joint. This is another runtime joint that is used to preserve volume.
+The runtime twister can split the twist value of a parent joint and only apply a fraction of that to the helper joint. This will help prevent the candy wrapper effect.
 
 <p align="center">
 <img src="Examples/runtimeTwister.gif" alt="Runtime Twister Example"><br>
