@@ -58,3 +58,8 @@ The runtime muscle is the more complex of the runtime joints. It mimics the beha
 <img src="Examples/runtimeMuscleInspector.png" alt="Runtime Muscle Inspector"><br>
 <i>Runtime Muscle Inspector</i>
 </p>
+
+### Credits
+* Modelling Topology: <a href="http://www.makehuman.org">Make Human</a>
+* Modelling: <a href="https://www.artstation.com/mfalzon"><strong>Michael Falzon</strong></a>
+* Animation: <a href="https://assetstore.unity.com/packages/3d/animations/everyday-motion-pack-free-115067">Everyday Motion Pack Free</a>
